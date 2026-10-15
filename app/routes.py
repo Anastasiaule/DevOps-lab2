@@ -182,3 +182,6 @@ def register_routes(app):
     @app.get("/health")
     def health():
         return jsonify({"status": "ok"})
+    @app.get("/")
+    def index():
+        return app.send_static_file("index.html")
