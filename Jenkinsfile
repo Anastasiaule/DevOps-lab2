@@ -19,16 +19,21 @@ pipeline {
                 bat '"%PYTHON%" -m pytest -v'
             }
         }
+        stage('Build images') {
+            steps {
+                bat 'docker compose build'
+            }
+        }
         stage('Deploy') {
             when { branch 'main' }
             steps {
-                bat '''
-                    robocopy . C:\\deploy\\library /E /XD .git .pytest_cache __pycache__ /NFL /NDL /NJH /NJS /NP
-                    if %ERRORLEVEL% LSS 8 exit /b 0
-                    exit /b 1
-                '''
-                bat '"%PYTHON%" -m pip install -r C:/deploy/library/requirements.txt'
-                echo 'Application deployed to C:\\deploy\\library'
+                bat 'docker compose up -d --remove-orphans'
+                retry(10) {
+                    sleep time: 3, unit: 'SECONDS'
+                    bat 'curl.exe -fsS http://localhost:8081/health'
+                }
+                bat 'docker compose ps'
+                echo 'Application deployed in containers: http://localhost:8081'
             }
         }
     }
