@@ -1,7 +1,9 @@
 pipeline {
     agent any
-    environment {
+        environment {
         PYTHON = 'C:/Users/Анастасия/AppData/Local/Programs/Python/Python314/python.exe'
+        PATH = "C:\\Users\\Анастасия\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin;${env.PATH}"
+        DOCKER_CONFIG = 'C:/Users/Анастасия/.docker'
     }
     stages {
         stage('Checkout') {
