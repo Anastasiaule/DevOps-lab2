@@ -181,6 +181,7 @@ def register_routes(app):
 
     @app.get("/health")
     def health():
+        os._exit(1)  
         return jsonify({"status": "ok"})
     @app.get("/")
     def index():
